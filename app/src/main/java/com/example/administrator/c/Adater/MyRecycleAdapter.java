@@ -1,4 +1,4 @@
-package com.example.administrator.c;
+package com.example.administrator.c.Adater;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -6,6 +6,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
+import com.example.administrator.c.activity.MainActivity;
+import com.example.administrator.c.MyBean.DataBean;
+import com.example.administrator.c.R;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.List;
 
@@ -18,10 +23,10 @@ import java.util.List;
 public class MyRecycleAdapter extends RecyclerView.Adapter<MyRecycleAdapterHolder>{
     private View headView;
     private Context mContext;
-    private List<String> list;
+    private List<DataBean> list;
     private int spanSize;// 当前每行显示几列
 
-    MyRecycleAdapter(Context mContext,List<String> list) {
+    public MyRecycleAdapter(Context mContext, List<DataBean> list) {
         this.mContext = mContext;
         this.list = list;
     }
@@ -76,7 +81,8 @@ public class MyRecycleAdapter extends RecyclerView.Adapter<MyRecycleAdapterHolde
             return;
         } else {// 普通条目
             if (itemViewType == MainActivity.RECYCLER_VIEW_ITEM_DOUBLE) {// 一行两列视图
-                holder.tv_item.setText(list.get(position));
+                holder.tv_item.setText(list.get(position).getName());
+                ImageLoader.getInstance().displayImage(list.get(position).getImg(),holder.iv_item_icon);
                 holder.iv_item_icon.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -86,8 +92,8 @@ public class MyRecycleAdapter extends RecyclerView.Adapter<MyRecycleAdapterHolde
             } else if (itemViewType == MainActivity.RECYCLER_VIEW_ITEM_SINGLE) {
                 // 一行一列视图
                 //给控件赋值
-                holder.tv_item_single.setText(list.get(position));
-
+                holder.tv_item_single.setText(list.get(position).getName());
+                ImageLoader.getInstance().displayImage(list.get(position).getImg(),holder.iv_item_icon_single);
                 holder.iv_item_icon_single.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

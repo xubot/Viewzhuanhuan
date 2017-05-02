@@ -1,13 +1,22 @@
-package com.example.administrator.c;
+package com.example.administrator.c.activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.administrator.c.Adater.MyRecycleAdapter;
+import com.example.administrator.c.MyBean.Bean;
+import com.example.administrator.c.MyBean.DataBean;
+import com.example.administrator.c.R;
+import com.google.gson.Gson;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +33,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TextView iv_switch;// 视图转换
     private MyRecycleAdapter adapter;
     private GridLayoutManager manager;
-    private List<String> list=new ArrayList<>();
+    private List<DataBean> list=new ArrayList<>();
+    private ByteArrayOutputStream bos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,11 +65,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         adapter.addHeadView(view);
         rcv.setAdapter(adapter);
     }
-
+    //得到数据
     private void setData() {
-        for(int i=0;i<21;i++) {
-            list.add(i+"");
+        String s = setServerData("data.json");
+        Gson gson = new Gson();
+        Bean erBean = gson.fromJson(s, Bean.class);
+        List<Bean.ApkBean> apk = erBean.getApk();
+        for(Bean.ApkBean ab:apk) {
+            String name = ab.getName();
+            String iconUrl = ab.getIconUrl();
+            list.add(new DataBean(iconUrl,name));
         }
+        Log.i("1111",apk.toString());
+    }
+    //打开文件
+    public String setServerData(String str)  {
+        InputStream stream = null;
+        try {
+            stream = getAssets().open(str);
+            byte[]b = new byte[1024];
+            int len;
+            bos = new ByteArrayOutputStream();
+            while ((len = stream.read(b))!=-1){
+                bos.write(b,0,len);
+            }
+            return  bos.toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return  str;
+
     }
 
     @Override

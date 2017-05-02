@@ -1,9 +1,12 @@
-package com.example.administrator.c;
+package com.example.administrator.c.Adater;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.example.administrator.c.activity.MainActivity;
+import com.example.administrator.c.R;
 
 /**
  * 用途：
