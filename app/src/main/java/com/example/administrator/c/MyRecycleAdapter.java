@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import java.util.List;
+
 /**
  * 用途：
  * 作者：xuBoTao
@@ -16,12 +18,12 @@ import android.widget.Toast;
 public class MyRecycleAdapter extends RecyclerView.Adapter<MyRecycleAdapterHolder>{
     private View headView;
     private Context mContext;
-    private int count;
+    private List<String> list;
     private int spanSize;// 当前每行显示几列
 
-    MyRecycleAdapter(Context mContext, int count) {
-        this.count = count;
+    MyRecycleAdapter(Context mContext,List<String> list) {
         this.mContext = mContext;
+        this.list = list;
     }
 
     /**
@@ -30,7 +32,7 @@ public class MyRecycleAdapter extends RecyclerView.Adapter<MyRecycleAdapterHolde
     @Override
     public int getItemCount() {
         //返回条目数加头布局个数
-        return count + 1;
+        return list.size();
     }
 
     @Override
@@ -53,39 +55,6 @@ public class MyRecycleAdapter extends RecyclerView.Adapter<MyRecycleAdapterHolde
     }
 
     @Override
-    public void onBindViewHolder(MyRecycleAdapterHolder holder, final int position) {
-        int itemViewType = getItemViewType(position);
-        // 头部
-        if (itemViewType == MainActivity.HEADER_RECYCLER_VIEW_ITEM) {
-            return;
-        } else {// 普通条目
-            if (itemViewType == MainActivity.RECYCLER_VIEW_ITEM_DOUBLE) {// 一行两列视图
-                holder.iv_item_icon.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Toast.makeText(mContext, "2列，" + (position - 1) + "", 0)
-                                .show();
-                    }
-                });
-            } else if (itemViewType == MainActivity.RECYCLER_VIEW_ITEM_SINGLE) {// 一行一列视图
-                holder.iv_item_icon_single.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Toast.makeText(mContext,"单列，" + (position - 1) + "", 0).show();
-                    }
-                });
-            }
-        }
-    }
-
-    /**
-     * 添加自定义头部
-     */
-    public void addHeadView(View view) {
-        this.headView = view;
-    }
-
-    @Override
     public int getItemViewType(int position) {
         if (position == 0) {
             return MainActivity.HEADER_RECYCLER_VIEW_ITEM;
@@ -98,6 +67,42 @@ public class MyRecycleAdapter extends RecyclerView.Adapter<MyRecycleAdapterHolde
                 return MainActivity.RECYCLER_VIEW_ITEM_DOUBLE;
             }
         }
+    }
+    @Override
+    public void onBindViewHolder(MyRecycleAdapterHolder holder, final int position) {
+        int itemViewType = getItemViewType(position);
+        // 头部
+        if (itemViewType == MainActivity.HEADER_RECYCLER_VIEW_ITEM) {
+            return;
+        } else {// 普通条目
+            if (itemViewType == MainActivity.RECYCLER_VIEW_ITEM_DOUBLE) {// 一行两列视图
+                holder.tv_item.setText(list.get(position));
+                holder.iv_item_icon.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(mContext, "2列，" + (position - 1) + "", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } else if (itemViewType == MainActivity.RECYCLER_VIEW_ITEM_SINGLE) {
+                // 一行一列视图
+                //给控件赋值
+                holder.tv_item_single.setText(list.get(position));
+
+                holder.iv_item_icon_single.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(mContext,"单列，" + (position - 1) + "", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        }
+    }
+
+    /**
+     * 添加自定义头部
+     */
+    public void addHeadView(View view) {
+        this.headView = view;
     }
 
     public int getSpanSize() {

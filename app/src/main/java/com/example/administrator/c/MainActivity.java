@@ -6,6 +6,10 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private RecyclerView rcv;
@@ -17,9 +21,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static final int RECYCLER_VIEW_ITEM_SINGLE = 3;
     // 一行显示两个
     public static final int RECYCLER_VIEW_ITEM_DOUBLE = 4;
-    private ImageView iv_switch;// 视图转换
+    private TextView iv_switch;// 视图转换
     private MyRecycleAdapter adapter;
     private GridLayoutManager manager;
+    private List<String> list=new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,8 +32,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         rcv = (RecyclerView) findViewById(R.id.rcv);
-        iv_switch = (ImageView) findViewById(R.id.iv_switch);
+        iv_switch = (TextView) findViewById(R.id.iv_switch);
         iv_switch.setOnClickListener(this);
+        setData();
         manager = new GridLayoutManager(this, 2);
         // 设置布局管理一条数据占用几行，如果是头布局则头布局自己占用一行
         manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
@@ -42,12 +48,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
         rcv.setLayoutManager(manager);
-        adapter = new MyRecycleAdapter(MainActivity.this, 20);
+        adapter = new MyRecycleAdapter(MainActivity.this, list);
         View view = View.inflate(this, R.layout.head, null);
         // 设置当前ViewType
         adapter.setSpanSize(MainActivity.RECYCLER_VIEW_ITEM_DOUBLE);
         adapter.addHeadView(view);
         rcv.setAdapter(adapter);
+    }
+
+    private void setData() {
+        for(int i=0;i<21;i++) {
+            list.add(i+"");
+        }
     }
 
     @Override
@@ -76,7 +88,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             return 2;
                         } else {
                             return 1;
-
                         }
                     }
                 });
@@ -97,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 adapter.setSpanSize(MainActivity.RECYCLER_VIEW_ITEM_SINGLE);
             }
             // 第一个参数是动画开始的位置索引
-            adapter.notifyItemRangeChanged(2, adapter.getItemCount());
+           adapter.notifyItemRangeChanged(2, adapter.getItemCount());
         }
     }
 }
